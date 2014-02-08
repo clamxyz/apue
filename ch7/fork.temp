@@ -1,0 +1,6 @@
+parent pid = 23088
+before fork
+pid = 23089,glob = 7, var = 8
+parent pid = 23088
+before fork
+pid = 23088,glob = 6, var = 7
