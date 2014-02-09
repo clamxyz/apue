@@ -1,0 +1,34 @@
+[root@clamxyz bin]# ls
+access  bar  chdir  copy  foo  ftw  ftw_chdir  hole.copy  hole.file  lstat  umask  unlink  utime  version
+[root@clamxyz bin]# ls -l ftw ftw_chdir
+-rwxrwxr-x 1 study study 10198 Jan 23 17:15 ftw
+-rwxrwxr-x 1 study study 10747 Jan 23 18:24 ftw_chdir
+[root@clamxyz bin]# chown root:root ftw ftw_chdir
+[root@clamxyz bin]# ll ftw ftw_chdir
+-rwxrwxr-x 1 root root 10198 Jan 23 17:15 ftw
+-rwxrwxr-x 1 root root 10747 Jan 23 18:24 ftw_chdir
+[root@clamxyz bin]# time ./ftw /
+regulare file   : 203769 82.68 %
+direcotries     :  23252  9.43 %
+block specail   :     46  0.02 %
+char specail    :    164  0.07 %
+fifo            :      4  0.00 %
+sock            :     35  0.01 %
+link file       :  19185  7.78 %
+
+real    2m36.209s
+user    0m0.128s
+sys     1m38.150s
+[root@clamxyz bin]# time ./ftw_chdir /
+regulare file   : 203769 82.68 %
+direcotries     :  23252  9.43 %
+block specail   :     46  0.02 %
+char specail    :    164  0.07 %
+fifo            :      4  0.00 %
+sock            :     35  0.01 %
+link file       :  19185  7.78 %
+
+real    1m49.726s
+user    0m0.032s
+sys     0m33.714s
+
