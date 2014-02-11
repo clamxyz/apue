@@ -2,7 +2,7 @@
 
 echo "$0"
 flag=0
-list=`ls -a`
+list=`ls *[^.sh]`
 for i in ${list} 
 do
 	if [ ! "${i}" -ef "$0" ] && [ -x ${i} ] && [ ! -d ${i} ]; then
@@ -11,7 +11,7 @@ do
 		flag=1
 	fi
 done
-if [ "${i}" == "0" ];then
+if [ "${flag}" == "0" ];then
 	echo "没有需要移动的文件"
 else
 	echo "移动完成"
