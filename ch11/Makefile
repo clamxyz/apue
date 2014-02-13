@@ -4,7 +4,7 @@ BIN=$(SRCS:.c=)
 all:$(BIN)
 
 $(BIN):$(SRCS)
-	gcc -Wall -DDEBUG -g -o $@ $(filter $@.c, $^) 
+	gcc -Wall -DDEBUG -g -lpthread -o $@ $(filter $@.c, $^) 
 
 install:
 	./mvbin.sh
