@@ -12,7 +12,7 @@
 
 typedef long TIME;
 
-#define US_PER_SEC 1000000	
+#define US_PER_SEC 1000000
 #define VERY_LONG_TIME	LONG_MAX
 #define time_now	get_system_time()
 
@@ -21,7 +21,7 @@ static struct timer
 	int inuse;		/* 0 for not in use, 1 for in use */
 	TIME interval;  /* interval usecs before expired */
 	void (*tmr_handler)(); /* handler the signal SIGALRM */ 
-	char *event;		/* TRUE for event is occure */
+	char *event;		/* TRUE for event occured */
 } timers[MAX_TIMERS];
 static struct sigaction  newact, oldact;
 static struct timer *timer_next; 
@@ -36,13 +36,11 @@ static void disable_interrupts();
 static TIME get_system_time();
 static void timer_update(TIME interval);
 static void start_physical_timer(TIME interval);
-static void stop_physical_timer();
+/*static void stop_physical_timer();*/
 static void timer_interrupt_handler(int signo);
 
 static void disable_interrupts()
 {
-	while(can_interrupts != 1)
-		;
 	sigset_t mask;
 	sigemptyset(&mask);
 	sigaddset(&mask, SIGALRM);
@@ -52,8 +50,6 @@ static void disable_interrupts()
 
 static void enable_interrupts()
 {
-	while(can_interrupts != 0)
-		;	
 	sigprocmask(SIG_SETMASK, &oldmask, NULL);
 	can_interrupts = 1;
 }
@@ -86,7 +82,7 @@ static void timer_update(TIME interval)
 		if (t->inuse)
 		{
 #ifdef DEBUG
-			printf("interval = %08ld, t->interval = %08ld, timer_next->interval = %10ld\n", interval, t->interval, timer_next->interval);
+			printf("interval = %ld, t->interval = %ld, timer_next->interval = %ld\n", interval, t->interval, timer_next->interval);
 #endif
 			if (interval < t->interval)
 			{
@@ -123,10 +119,13 @@ static void start_physical_timer(TIME interval)
 	setitimer(ITIMER_REAL, &itv, NULL);	
 }
 
+/*
 static void stop_physical_timer()
 {
 	sigaction(SIGALRM, &oldact, NULL);
 }
+*/
+
 static void timer_scheduler()
 {
 	struct timer *t;
@@ -146,7 +145,9 @@ static void timer_interrupt_handler(int signo)
 	printf("caughted interrupted.\n");
 #endif
 	timer_update( time_now - time_timer_reset);
+#ifdef SCHED_DEBUG
 	timer_scheduler();
+#endif
 	if (timer_next)
 	{
 #ifdef DEBUG
@@ -156,10 +157,12 @@ static void timer_interrupt_handler(int signo)
 		time_timer_reset = time_now;
 		start_physical_timer(timer_next->interval);
 	}	  
+	/* 不必显示关闭计时器，setitimer会自动关闭(it_interval={0,0})
 	else
 	{
 		stop_physical_timer();
 	}
+	*/
 	
 } 
 

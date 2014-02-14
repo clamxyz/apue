@@ -1,2 +1,2 @@
 timer:
-	gcc -Wall -g timer.c main.c timer.h
+	gcc -Wall -O3 timer.c main.c timer.h
