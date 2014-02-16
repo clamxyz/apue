@@ -17,7 +17,6 @@ extern "C" {
 #define err_sys(s, err)
 #endif
 
-
 #ifdef __cplusplus
 }
 #endif
