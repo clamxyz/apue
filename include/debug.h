@@ -9,7 +9,7 @@ extern "C" {
 
 #ifdef DEBUG
 #define dp(s, err) do { printf("%s[%d]\t%s:[%d][%s]\n", __FILE__,__LINE__,s, err, strerror(err));} while(0)
-#define err_ret(s, err) do { dp(s, err); return; } while(0)
+#define err_ret(s, err) do { dp(s, err); return err; } while(0)
 #define err_sys(s, err) do { dp(s, err); exit(err) ;} while(0)
 #else
 #define dp(s, err) 
