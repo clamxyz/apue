@@ -28,7 +28,11 @@ if [ $? -ne 0 ]; then
 	exit $?
 fi
 
-touch Makefile
+cp ../Makefile .
+if [ $? -ne 0 ]; then
+	echo "copy Makefile failed."
+	exit $?
+fi
 echo "创建成功"
 
 
