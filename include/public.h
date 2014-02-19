@@ -9,5 +9,7 @@
 #include <unistd.h>
 #include "debug.h"
 
+#define MAXLINE 1024
+
 #endif
 

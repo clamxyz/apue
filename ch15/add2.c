@@ -1,5 +1,5 @@
 #include "public.h"
-
+#define MAXLINE 1024
 int main()
 {
 	char buf[MAXLINE];
