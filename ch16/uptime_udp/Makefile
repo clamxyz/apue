@@ -4,7 +4,7 @@ BIN=$(SRCS:.c=)
 all:$(BIN)
 
 $(BIN):$(SRCS)
-	gcc -Wall -DDEBUG -Iinclude/ -I../include/ -L../lib/  -ldaemon -g -o $@ $(filter $@.c, $^)  ./libmysock.so
+	gcc -Wall -DDEBUG -Iinclude/ -I../../include/ -g -o $@ $(filter $@.c, $^)  ./libmysock.so ./libdaemon.so
 
 install:
 	./mvbin.sh
