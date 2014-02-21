@@ -7,7 +7,7 @@
 
 #define BUFLEN 128
 
-extern void daemonize();
+extern void daemonize(const char *);
 
 int serv(int fd)
 {
@@ -17,7 +17,7 @@ int serv(int fd)
 	socklen_t len;	
 	struct sockaddr_in *sinp;
 	FILE *fp;
-	
+	errno = 0;	
 	while(recvfrom(fd, buf, BUFLEN, 0, &sa, &len) > 0)
 	{
 		sinp = (struct sockaddr_in *)&sa;
@@ -33,6 +33,7 @@ int serv(int fd)
 		{
 			sendto(fd, buf, strlen(buf), 0, &sa, len);
 		}			
+		pclose(fp);
 	}
 	syslog(LOG_ERR, "recvfrom error[%d][%s]", errno, strerror(errno));	
 	return 0;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
 	}
 	memset(&hit, 0, sizeof hit);
 	hit.ai_socktype = SOCK_DGRAM; 
-	daemonize();
+	daemonize("ruptimed_udp");
 	
 	if ((err = getaddrinfo(host, "ruptimed", &hit, &ailist)) < 0)
 	{
@@ -64,18 +65,11 @@ int main(int argc, char *argv[])
 	
 	for (aip = ailist; aip != NULL; aip = aip->ai_next)
 	{
-		syslog(LOG_ERR, "socket type = %s\n", aip->ai_socktype == SOCK_DGRAM ? "SOCK_DGRAM" : "Default");
-		if ( (fd = socket(aip->ai_family, aip->ai_socktype, 0)) < 0)
+		if ( (fd = initserv(aip->ai_socktype, aip->ai_addr, aip->ai_addrlen)) < 0)
 		{
-			syslog(LOG_ERR, "socket error[%d][%m]", errno);
-		return -1;
-		}
-		if ( initserv(fd, aip->ai_addr, aip->ai_addrlen) < 0)
-		{
-			syslog(LOG_ERR, "initserv error[%d][%m]", errno);
+			syslog(LOG_ERR, "initserv error[%d][%m][line %08d]", errno, __LINE__);
 			return -1;
 		}
-
 		serv(fd);	
 		close(fd);
 		exit(0);

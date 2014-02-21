@@ -10,7 +10,7 @@
 int print_buf(int fd, struct addrinfo *aip)
 {
 	char buf[BUFLEN];
-	
+
 	buf[0] = 0;
 	if (sendto(fd, buf, 1, 0, aip->ai_addr, aip->ai_addrlen) < 0)
 	{
@@ -37,8 +37,12 @@ int main(int argc, char *argv[])
 	char server[] = "ruptimed";	
 
 	memset(&hit, 0, sizeof hit);
-	hit.ai_socktype = SOCK_STREAM;
-	
+	hit.ai_socktype = SOCK_DGRAM;
+	if (gethostname(host, INET_ADDRSTRLEN) < 0)
+	{
+		printf("gethostname error[%d][%s]\n", errno, strerror(errno));
+		exit(1);
+	}	
 	if ( (err = getaddrinfo(host, server, &hit, &ailist)) < 0)
 	{
 		printf("getaddrinfo error[%d][%s]\n", err,gai_strerror(err));
@@ -55,6 +59,7 @@ int main(int argc, char *argv[])
 		close(fd);
 		exit(0);
 	}
+	printf("not found aip\n");
 	return 0;
 }
 

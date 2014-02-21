@@ -32,7 +32,7 @@ int initserv(int type, struct sockaddr *paddr, socklen_t len)
 	if ( (fd = socket(paddr->sa_family, type, 0)) < 0)
 		return -1;
 	if ( setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) < 0)
-		return -1;	
+		goto errout;
 	if ( bind(fd, paddr, len) < 0)
 	{
 		err = errno;
@@ -45,9 +45,10 @@ int initserv(int type, struct sockaddr *paddr, socklen_t len)
 					err = errno;
 					goto errout;
 			}
-		return fd;
 	}
+	return fd;
 errout:
+	err = errno;
 	close(fd);
 	errno = err;
 	return -1;
