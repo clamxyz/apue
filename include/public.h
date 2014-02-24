@@ -11,5 +11,8 @@
 
 #define MAXLINE 1024
 
+int send_err(int clifd, int errcode, char *errmsg);
+int send_fd(int clifd, int fd);
+
 #endif
 
