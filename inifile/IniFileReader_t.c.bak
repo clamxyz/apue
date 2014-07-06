@@ -1,0 +1,39 @@
+#include "IniFileReader.h"
+#include <stdio.h>
+
+int main(int argc, char *argv[])
+{
+	char *file_name;
+	INIFILE *pif;
+	
+	if (argc != 2)
+	{
+		printf("Usage:%s <file>\n", argv[0]);
+		return -1;
+	}
+	file_name = argv[1];
+	
+	pif = IfrOpen(file_name);
+	if (pif == NULL)
+	{
+		printf("open failed.\n");
+		return -1;
+	}
+	puts("=====Begin IfrDump======");
+	IfrDump(pif);
+	puts("=====End   IfrDump======");
+	puts("=====Test IfrGetValueByPath========");
+	printf("/key1=[%s]\n",IfrGetValueByPath(pif, "/key1"));
+	printf("/SECTION1/sk1=[%s]\n", IfrGetValueByPath(pif, "/SECTION1/sk1"));
+	printf("/SECTION1=[%s]\n", IfrGetValueByPath(pif, "/SECTION1"));
+	printf("/=[%s]\n", IfrGetValueByPath(pif, "/"));
+	puts("====END IfrGetValueByPath==========");
+	puts("=====Test IfrGetValueBySection========");
+	printf("/key1=[%s]\n",IfrGetValueBySection(pif, NULL, "key1"));
+	printf("/SECTION1/sk1=[%s]\n", IfrGetValueBySection(pif, "SECTION1", "sk1"));
+	printf("/SECTION1=[%s]\n", IfrGetValueBySection(pif, "SECTION1", NULL));
+	printf("/=[%s]\n", IfrGetValueBySection(pif, "/"));
+	puts("====END IfrGetValueBySection==========");
+	IfrClose(pif);
+	return 0;
+}
